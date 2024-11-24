@@ -7,7 +7,7 @@ export default function Topbar() {
     return (
         
 
-        <nav className="top-0 fixed items-center flex w-full justify-between  bg-black bg-opacity-25 p-4 z-50">
+        <nav className="top-0 fixed items-center flex w-full justify-between  bg-slate-600 bg-opacity-25 p-4 z-50">
            <Link href="/" className="flex items-center gap-4">
             <Image src="vercel.svg" alt="logo" width={26} height={26}/>
             <p className="text-xl font-extrabold text-white max-xs:hidden">Threads</p>

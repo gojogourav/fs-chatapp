@@ -1,28 +1,45 @@
-import Link from "next/link.js"
-import Image from "next/image"
-import {sidebarLinks} from "../../constants/index.js"
-export default function LeftSidebar(){
-    return(
-        <section className="">
-            <div className="flex w-full flex-1 flex-col gap-6 px-6">
-                {sidebarLinks.map((link)=>(
-                    <Link href={link.route}
-                    key={link.label}
-                    className=""
-                    >
-                        <Image
+"use client"
+
+import React from 'react'
+import {sidebarLinks} from "../../constants/index"
+import Link from 'next/link.js'
+import Image from 'next/image'
+import { usePathname,useRouter } from 'next/navigation.js'
+import { SignOutButton } from '@clerk/nextjs'
+import { SignedIn } from '@clerk/clerk-react'
+
+function LeftSidebar() {
+    const pathname = usePathname()
+    const route = useRouter()
+  return (
+    <section className=''>
+        <div className='mt-20 font-bold text-xl w-48  rounded rounded-xl'>
+            {sidebarLinks.map((link)=>{
+                const isActive = (pathname.includes(link.route) && link.route.length>1 )||pathname === link.route  
+
+               return( 
+               
+               <Link href={link.route} key={link.label} className={`flex p-2  m-2 gap-2 ${isActive && 'bg-purple-500'}`}
+                
+               >
+                    <Image
                         src={link.imgURL}
                         alt={link.label}
-                        width={24}
                         height={24}
-                        />
-                        <p className=" text-white max-lg:hidden">{link.label }
+                        width={24}
+                    />
+                    <p className='text-white'>{link.label}</p>
+                </Link>)
+})}
+                <SignedIn>
+                        <SignOutButton>
 
-                        </p>
-                    </Link>
-                ))}
-            </div>
-        </section>
-    )
+                        </SignOutButton>
+                    </SignedIn>
+        </div>
+    </section>
+
+  )
 }
 
+export default LeftSidebar
