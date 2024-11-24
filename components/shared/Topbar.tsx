@@ -12,11 +12,11 @@ export default function Topbar() {
             <Image src="vercel.svg" alt="logo" width={26} height={26}/>
             <p className="text-xl font-extrabold text-white max-xs:hidden">Threads</p>
 
-            <div className=" flex items-center gap-1 text-white">
+            <div className=" flex items-center gap-1 text-white ">
                 <div className="block md:hidden">
                     <SignedIn>
                         <SignOutButton>
-                            <div className=" flex cursor-pointer">
+                            <div className=" flex cursor-pointer ">
                                 <Image 
                                 src="vercel.svg"
                                 alt="logo"
