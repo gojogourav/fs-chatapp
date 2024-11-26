@@ -1,4 +1,4 @@
-"use client"
+
 import React from 'react'
 import { SignOutButton } from '@clerk/nextjs'
 import AccountProfile from '@/components/forms/AccountProfile'
