@@ -1,4 +1,5 @@
 "use client";
+
 //TODO:i don't understood anything in this re do it againnnnnnnnnn
 
 import { useForm } from "react-hook-form";
@@ -20,7 +21,10 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import isBase64Image from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
-
+import { updateUser } from "@/lib/actions/user.actions";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 interface Props {
   user: {
@@ -36,8 +40,10 @@ interface Props {
 
 //TODO:DOUBT HOW IT WORKS
 const AccountProfile = ({ user, btnTitle }: Props) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [files, setFiles] = useState<File[]>([]);
-  const {startUpload} = useUploadThing("media")
+  const { startUpload } = useUploadThing("media");
 
   const form = useForm({
     resolver: zodResolver(UserValidation),
@@ -50,22 +56,52 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   });
 
   //TODO:Setting on submit
-async  function onSubmit(values: z.infer<typeof UserValidation>) {
+  const userId = useUser().user?.id;
+  async function onSubmit(values: z.infer<typeof UserValidation>) {
     const blob = values.profile_photo;
 
-    const hasImageChanged = isBase64Image(blob)
+    const hasImageChanged = isBase64Image(blob);
 
-    if(hasImageChanged){
-      const ImgRes = await startUpload(files)
+    if (hasImageChanged) {
+      const ImgRes = await startUpload(files);
 
-      if(ImgRes && ImgRes[0].url){
-        values.profile_photo = ImgRes[0].url
+      if (ImgRes && ImgRes[0].url) {
+        values.profile_photo = ImgRes[0].url;
       }
     }
 
-    //TODO:Update your profile
+    // userId,
+    // username,
+    // name,
+    // bio,
+    // path,
+    // image,
 
+    try {
+      if (!userId) {
+        throw new Error("User not found 404 required");
+      }
 
+      await updateUser({
+        username: values.username,
+        name: values.name,
+        bio: values.bio,
+        image: values.profile_photo,
+        userId: userId,
+        path: pathname,
+      });
+
+      if (pathname === "/profile/edit") {
+        router.back();
+      } else {
+        router.push("/");
+      }
+      console.log("User updated successfully");
+    } catch (error) {
+      // throw error;
+      console.error("Error updating user:", error);
+      // Handle the error as appropriate (e.g., show a notification to the user)
+    }
   }
 
   //TODO:Understand this part
