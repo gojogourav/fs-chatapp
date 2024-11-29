@@ -32,17 +32,18 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black` }
       >
         <Topbar/>
-        <main>
+        <main className=" flex">
+          
+
           <LeftSidebar/>
-          <section className="main-container">
-            <div>
+          <section className="">
+            <div className="">
               {children}
             </div>
           </section>
-          <RightSidebar />
         </main>
         <Bottombar/>
       </body>
