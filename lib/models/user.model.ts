@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     threads:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"thread"
+            ref:"Thread"
         }
     ],
     onboard:{
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     communities:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"community"
+            ref:"Community"
         }
     ]
 })

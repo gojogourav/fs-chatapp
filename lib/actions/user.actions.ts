@@ -4,6 +4,7 @@ import dbConnect from "../dbConnect";
 import User from "../models/user.model";
 
 interface Params {
+  onboard:boolean,
   userId: any;
   username: string;
   name: string;
@@ -13,6 +14,7 @@ interface Params {
 }
 
 export async function updateUser({
+  onboard,
   userId,
   username,
   name,
@@ -26,6 +28,7 @@ export async function updateUser({
     await User.findOneAndUpdate(
       { userid: userId },
       {
+        onboard,
         username: username.toLowerCase().trim(),
         name,
         bio,
@@ -39,7 +42,22 @@ export async function updateUser({
       revalidatePath(path);
     }
   } catch (error: any) {
-    console.log(error);
+    console.log(error.message);
     throw new Error(`Failed to create/update user : ${error.message}`);
   }
+}
+
+
+export const fetchUser = async (userId:any) => {
+    try{
+      await dbConnect();
+
+      return await User.findOne({userid:userId})
+
+    }catch(error:any){
+      console.error('Error fetching usr ',error);
+
+      throw new Error( error instanceof Error  ? "Error fetching user ":"Unknown error occured");
+
+    }
 }

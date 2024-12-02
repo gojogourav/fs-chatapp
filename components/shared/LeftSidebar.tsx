@@ -19,7 +19,7 @@ function LeftSidebar() {
     },
 
     {
-      imgURL: "/logo.svg",
+      imgURL: "/assets/home.svg",
       route: "/",
       label: "Home",
     },

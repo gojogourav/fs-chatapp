@@ -1,24 +1,26 @@
 import React from 'react'
-import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { fetchUser } from '@/lib/actions/user.actions';
 import PostThread from '@/components/forms/PostThread';
-
-
+import { currentUser } from '@clerk/nextjs/server';
 export default async function Page() {
-  const user = await currentUser();
+  const user =  await currentUser()
+  
   if(!user) return null;
-  console.log(user.id);
+  
   
 
   const userInfo = await fetchUser(user.id)
+  // const userID = userInfo.id;
+  console.log(`type of user is ${typeof userInfo}`);
+  
   if(!userInfo?.onboard) redirect('/onboarding');
 
-
+  
 
   return (
-    <div className='mt-40 ml-20 font-extrabold text-2xl text-white'>
-      <PostThread user={user}/>
+    <div className='w-full  mt-40 ml-20 font-extrabold text-2xl text-white '>
+      <PostThread user={user.id.toString()}/>
     </div>
   )
 }

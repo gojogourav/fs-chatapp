@@ -7,7 +7,6 @@ function page() {
       <div>
 
       < SignIn  />
-      <SignOutButton/>
       </div>
     </div>
   )

@@ -83,6 +83,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       }
 
       await updateUser({
+        onboard:true,
         username: values.username,
         name: values.name,
         bio: values.bio,
@@ -91,11 +92,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
         path: pathname,
       });
 
-      if (pathname === "/profile/edit") {
-        router.back();
-      } else {
-        router.push("/");
-      }
+      // if (pathname === "/profile/edit") {
+      //   router.back();
+      // } else {
+      //   router.push("/");
+      // }
       console.log("User updated successfully");
     } catch (error) {
       // throw error;

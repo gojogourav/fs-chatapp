@@ -32,15 +32,15 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black` }
+        className={` ${geistSans.variable} ${geistMono.variable} antialiased bg-black h-8/12` }
       >
         <Topbar/>
-        <main className=" flex">
+        <main className=" flex flex-grow-0 h-8/12">
           
 
           <LeftSidebar/>
-          <section className="">
-            <div className="">
+          <section className="w-8/12  h-8/12">
+            <div className="h-8/12">
               {children}
             </div>
           </section>
