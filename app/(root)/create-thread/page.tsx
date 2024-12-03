@@ -21,7 +21,7 @@ export default async function Page() {
   
 
   return (
-    <div className='w-full  mt-40 ml-20 font-extrabold text-2xl text-white '>
+    <div className='w-full  mt-40 ml-20 font-extrabold text-2xl text-white h-full'>
       <PostThread user={JSON.parse(JSON.stringify((userInfo._id)))}/>
     </div>
   )

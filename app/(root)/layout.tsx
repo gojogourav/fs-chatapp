@@ -39,8 +39,8 @@ export default function RootLayout({
           
 
           <LeftSidebar/>
-          <section className="w-8/12  h-8/12">
-            <div className="h-8/12">
+          <section className="w-8/12  ">
+            <div className="h-max">
               {children}
             </div>
           </section>

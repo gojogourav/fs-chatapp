@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-
+import { useRouter } from "next/navigation";
 import { createThread } from "@/lib/actions/thread.actions";
 import mongoose from "mongoose";
 // import { usePathname } from "next/navigation";
@@ -25,6 +25,7 @@ import mongoose from "mongoose";
 
 
 export default function PostThread( {user}:{user :string}) {
+  const router = useRouter()
   if(!user){
     console.log(`user doesn't exist`);
     
@@ -56,30 +57,36 @@ export default function PostThread( {user}:{user :string}) {
         parentId:null,
     })
 
-    // router.push("/")
+    router.push("/")
   }
 
   return (
 
-    <div className="bg-zinc-900 w-11/12 h-11/12">
+    <div className=" w-11/12 h-11/12">
 
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  border border-white bg-zinc-900 w-11/12 h-11/12 text-black">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  border border-zinc-600 rounded-2xl  w-11/12 h-max text-black">
         <FormField
           control={form.control}
           name="thread"
           render={({ field }) => (
             <FormItem>
-              <FormLabel></FormLabel>
-              <FormControl>
-                <Input className="h-full w-full" placeholder="Write here ..." {...field} />
+              <FormLabel>
+                <div className="text-white text-lg text-center font-bold m-5">
+                Create Threads
+
+                </div>
+                
+              </FormLabel>
+              <FormControl >
+                <textarea className="p-7 h-auto w-full bg-zinc-800 text-white" placeholder="Write here ..." {...field} />
               </FormControl>
              
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-purple-600">Submit</Button>
+        <Button type="submit" className="bg-purple-600 font-bold flex-col content-center text-xl ml-5 mb-5  p-5 ">Submit</Button>
       </form>
     </Form>
     </div>
