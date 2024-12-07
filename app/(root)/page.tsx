@@ -1,28 +1,37 @@
 // import LeftSidebar from "@/components/shared/LeftSidebar";
 
+import { ThreadCard } from "@/components/cards/Thread-fetchpost.home";
 import { fetchPosts } from "@/lib/actions/thread.actions";
-
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
   const result = await fetchPosts(1,30);
+  const user = await currentUser();
   
-  console.log(result);
+  console.log(user?.id);
   
   return (
    <> 
-      <div className="mt-40 ml-20 font-extrabold text-2xl text-white ">
-        {result.posts.map(post=>
-          <div key={post._id} className="p-5 border border-white" >
-            <div className="text-purple-500 font-normal text-lg top-0">
-              {post.author.username}
-            </div>
+      <div className=" mt-40 ml-20 font-extrabold text-2xl text-white ">
+        {result.posts.length===0? (
+        <div>No posts available</div>)
+        :<>
+          {result.posts.map((post)=>(
+            <ThreadCard
 
-            <div className="mt-10 bg-zinc-800 p-10">
-            {post.text}
-
-            </div>
-          </div>
-        )}
+              key = {post._id}
+              id={post._id}
+              currentUserId = {user?.id}
+              parentId = {post.parentId}
+              content = {post.text}
+              author = {post.author}
+              community = {post.community}
+              createedAt = {post.createedAt}
+              comments = {post.children}
+            />
+          ))}
+        </>
+}
       </div>
 
    </>
