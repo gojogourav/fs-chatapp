@@ -1,4 +1,4 @@
-import { ThreadCard } from "@/components/cards/Thread-fetchpost.home";
+import { CommentCard, ThreadCard } from "@/components/cards/Thread-fetchpost.home";
 import Comment from "@/components/forms/Comment";
 import { fetchComments, fetchThreadById } from "@/lib/actions/thread.actions";
 import User from "@/lib/models/user.model";
@@ -17,7 +17,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     const clerkUser = await currentUser();
     const userid = clerkUser?.id;
     const user = await User.findOne({ userid: userid });
-    console.log("THIS IS USER IN THREAD", user);
+    console.log("THIS IS USER IN THREAD", user.username);
 
     if (!user) {
       console.error("Error user not found");
@@ -28,6 +28,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     const threadId = new mongoose.Types.ObjectId(id)
 
     const thread = await fetchThreadById(id);
+
     if (!thread) {
       console.error("Error thread not loaded");
 
@@ -47,7 +48,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     console.log(comments.posts.length)
 
     return (
-      <section className="mt-40 ml-20 font-extrabold text-2xl text-white ">
+      <section className="mt-40 ml-80 font-extrabold text-2xl text-white ">
         <div>
           <ThreadCard
             key={thread._id}
@@ -75,7 +76,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           ) : (
             <>
               {comments.posts.map((post) => (
-                <ThreadCard
+                <CommentCard
                   key={post._id}
                   id={post._id}
                   currentUserId={user?.id}

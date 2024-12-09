@@ -51,7 +51,7 @@ function LeftSidebar() {
   ];
 
   return (
-    <div className="mt-20 font-bold text-xl w-60  rounded-xl rounded-l-none  bg-zinc-900 p-3 h-auto hidden sm:block  ">
+    <div className="fixed mt-20 font-bold text-xl w-60  rounded-xl rounded-l-none  bg-zinc-900 p-3 h-auto hidden sm:block  ">
       {sidebarLinks.map((link) => {
         const isActive = pathname === link.route;
 
