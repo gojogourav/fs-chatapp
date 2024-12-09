@@ -9,20 +9,19 @@ export default function Topbar() {
 
         <nav className="top-0 fixed items-center flex w-full text-xl bg-zinc-900   p-4 z-50 justify-center">
            <Link href="/" className="flex items-center gap-4">
-            <Image src="vercel.svg" alt="logo" width={26} height={26}/>
             <p className=" font-extrabold text-white max-xs:hidden text-2xl">Threads</p>
 
             <div className=" flex items-center gap-1 text-white ">
-                    <SignedIn>
+                    {/* <SignedIn>
                         <SignOutButton>
                                 <Image 
-                                src="vercel.svg"
+                                src="/assets/logout.svg"
                                 alt="logo"
                                 width={24}
                                 height={24}
                                 />
                         </SignOutButton>
-                    </SignedIn>
+                    </SignedIn> */}
 
             </div>
            </Link>

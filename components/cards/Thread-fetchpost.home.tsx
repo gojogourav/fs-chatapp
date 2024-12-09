@@ -2,13 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 interface Props {
   key: string;
-  id: string;
+  id: object;
   currentUserId?: string;
-  parentId: string|null;
+  parentId: object|null;
   content: string;
   author: {name:string;
             image:string;
-            id:string
+            id:object
   };
   community: {
     id:string;
@@ -36,7 +36,7 @@ export const ThreadCard = ({
   comments,
 }: Props) => {
   return(
-    <article className="flex w-full flex-col rounded border border-zinc-600  my-10 p-5 text-base">
+    <article className="flex w-full flex-col rounded border border-zinc-600  mt-10 p-5 text-base">
         <div className="">
             <div className="flex gap-2 items-center mb-4 text-lg">
                 <div className="   ">

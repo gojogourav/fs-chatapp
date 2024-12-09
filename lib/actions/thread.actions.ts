@@ -95,6 +95,7 @@ export async function fetchThreadById(id: string) {
             },
           },
         ],
+    // Always run for API routes
       });
 
       return thread
@@ -102,4 +103,40 @@ export async function fetchThreadById(id: string) {
     console.log(error);
   }
 
+}
+
+export async function addCommentToThread(
+    threadId:string,
+    commentText:string,
+    userId:object,
+    path:string,
+) {
+    await dbConnect()
+    try{
+
+        console.log('ADDCOMMENTTOTHREAD');
+        
+        const orignalThread = await Thread.findById(threadId)
+
+        if(!orignalThread){
+            throw new Error("Thread not found")
+        }
+
+        const commentThread = new Thread({
+            text:commentText,
+            author:userId,
+            parentId:threadId,
+        })
+        
+        const saveCommentThread = await commentThread.save();
+        orignalThread.children.push(saveCommentThread._id);
+        await orignalThread.save()
+
+        revalidatePath(path);
+
+
+    }catch(error:any){
+        throw new Error(`Error adding comment to thread ${error.message}`)
+    }
+    
 }
