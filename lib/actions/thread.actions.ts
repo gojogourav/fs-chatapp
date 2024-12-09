@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import dbConnect from "../dbConnect";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
+import mongoose from "mongoose";
 
 interface Params {
   text: string;
@@ -71,6 +72,50 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     throw new Error("Failed to fetch posts");
   }
 }
+interface Params2 {
+  pageNumber: number;
+  pageSize: number;
+  threadId: object;
+}
+
+export async function fetchComments({
+  pageNumber = 1,
+  pageSize = 20,
+  threadId,
+  
+}: Params2) {
+  try {
+    await dbConnect();
+
+    if (pageNumber < 1 || pageSize < 1) {
+      throw new Error("Invalid pagination");
+    }
+    const skipAmount = (pageNumber - 1) * pageSize;
+    const parentThreadId = threadId
+    console.log(parentThreadId);
+    
+    const postsQuery = await Thread.find({ parentId: parentThreadId })
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(pageSize)
+      .populate({ path: "author", model: User })
+      .populate({
+        path: "children",
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id name parentId image",
+        },
+      });
+      const totalPostsCount = await Thread.countDocuments({ parentId: threadId });
+      const isNext = totalPostsCount > skipAmount + postsQuery.length;
+  
+      return { posts: postsQuery, isNext, totalPostsCount };
+  } catch (error) {
+    console.error("Error fetching comments", error);
+    throw new Error("Failed to fetch comments");
+  }
+}
 
 export async function fetchThreadById(id: string) {
   await dbConnect();
@@ -95,48 +140,43 @@ export async function fetchThreadById(id: string) {
             },
           },
         ],
-    // Always run for API routes
+        // Always run for API routes
       });
 
-      return thread
+    return thread;
   } catch (error) {
     console.log(error);
   }
-
 }
 
 export async function addCommentToThread(
-    threadId:string,
-    commentText:string,
-    userId:object,
-    path:string,
+  threadId: string,
+  commentText: string,
+  userId: object,
+  path: string
 ) {
-    await dbConnect()
-    try{
+  await dbConnect();
+  try {
+    // console.log('ADDCOMMENTTOTHREAD');
 
-        console.log('ADDCOMMENTTOTHREAD');
-        
-        const orignalThread = await Thread.findById(threadId)
+    const orignalThread = await Thread.findById(threadId);
 
-        if(!orignalThread){
-            throw new Error("Thread not found")
-        }
-
-        const commentThread = new Thread({
-            text:commentText,
-            author:userId,
-            parentId:threadId,
-        })
-        
-        const saveCommentThread = await commentThread.save();
-        orignalThread.children.push(saveCommentThread._id);
-        await orignalThread.save()
-
-        revalidatePath(path);
-
-
-    }catch(error:any){
-        throw new Error(`Error adding comment to thread ${error.message}`)
+    if (!orignalThread) {
+      throw new Error("Thread not found");
     }
-    
+
+    const commentThread = new Thread({
+      text: commentText,
+      author: userId,
+      parentId: threadId,
+    });
+
+    const saveCommentThread = await commentThread.save();
+    orignalThread.children.push(saveCommentThread._id);
+    await orignalThread.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error adding comment to thread ${error.message}`);
+  }
 }
