@@ -82,7 +82,6 @@ export async function fetchComments({
   pageNumber = 1,
   pageSize = 20,
   threadId,
-  
 }: Params2) {
   try {
     await dbConnect();
@@ -91,9 +90,9 @@ export async function fetchComments({
       throw new Error("Invalid pagination");
     }
     const skipAmount = (pageNumber - 1) * pageSize;
-    const parentThreadId = threadId
+    const parentThreadId = threadId;
     console.log(parentThreadId);
-    
+
     const postsQuery = await Thread.find({ parentId: parentThreadId })
       .sort({ createdAt: "desc" })
       .skip(skipAmount)
@@ -107,15 +106,87 @@ export async function fetchComments({
           select: "_id name parentId image",
         },
       });
-      const totalPostsCount = await Thread.countDocuments({ parentId: threadId });
-      const isNext = totalPostsCount > skipAmount + postsQuery.length;
-  
-      return { posts: postsQuery, isNext, totalPostsCount };
+    const totalPostsCount = await Thread.countDocuments({ parentId: threadId });
+    const isNext = totalPostsCount > skipAmount + postsQuery.length;
+
+    return { posts: postsQuery, isNext, totalPostsCount };
   } catch (error) {
     console.error("Error fetching comments", error);
     throw new Error("Failed to fetch comments");
   }
 }
+
+interface Params3 {
+  pageNumber: number;
+  pageSize: number;
+  userid: object;
+}
+
+export async function fetchUserThreads({
+  pageNumber = 1,
+  pageSize = 20,
+  userid,
+}: Params3) {
+  if (pageNumber < 1 || pageSize < 1) {
+    throw new Error("Invalid pagenumber");
+  }
+
+  const skipAmount = (pageNumber - 1) * pageSize;
+  try {
+    await dbConnect();
+    const userPosts = await Thread.find({ author: userid ,  parentId: null })
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(pageSize)
+      .populate({ path: "author", model: User })
+      .populate({
+        path: "children",
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id name parentId image",
+        },
+      });
+      // console.log(userPosts);
+      // console.log(`THIS IS USERPOST = ${userPosts}`);
+      
+      
+      return { post: userPosts };
+    } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching posts");
+  }
+}
+
+export async function fetchUserComments({
+  pageNumber=1,
+  pageSize=20,
+  userid,
+}:Params3){
+  const skipAmount = (pageNumber-1)*pageSize;
+  try{
+    await dbConnect();
+    const userComments = Thread.find({author:userid,parentId:{$ne:null}})
+    .sort({createdAt:"desc"})
+    .skip(skipAmount)
+    .populate({ path: "author", model: User })
+      .populate({
+        path: "children",
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id name parentId image",
+        },
+      });
+
+      return{post:userComments};
+    
+  }catch(error){
+    console.error(error);
+    throw new Error("Error fetching comments")
+  }
+}
+
 
 export async function fetchThreadById(id: string) {
   await dbConnect();
