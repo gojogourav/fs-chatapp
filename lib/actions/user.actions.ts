@@ -52,7 +52,7 @@ export const fetchUser = async (userId:any) => {
     try{
       await dbConnect();
 
-      return await User.findOne({userid:userId})
+      return await User.findOne({username:userId})
 
     }catch(error:any){
       console.error('Error fetching usr ',error);

@@ -1,8 +1,9 @@
-"use client"
+// "use client"
 import Image from "next/image";
 import { fetchUserComments, fetchUserThreads } from "@/lib/actions/thread.actions";
 import { ThreadCard } from "./Thread-fetchpost.home";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 interface Params {
   accountId: object;
   authUserId: string;
@@ -20,68 +21,14 @@ export const ProfileHeader = async ({
   ImageUrl,
   bio,
 }: Params) => {
-  // console.log(`THIS IS NAME= ${ImageUrl}`);
-  const handleFetch = async(type:string)=>{
-    let fetchedData;
-    switch(type){
-        case "posts":
-            fetchedData = await fetchUserThreads({
-                pageSize: 20,
-                pageNumber: 1,
-                userid: accountId,
-              });
-            break;
-          case "comments":
-            fetchedData = await fetchUserComments(
-                {
-                    pageSize: 20,
-                    pageNumber: 1,
-                    userid: accountId,
-                  }
-            );
-            break;
-        //   case "mentions":
-        //     fetchedData = await fetchMentions();
-            // break;
-            default:
-                fetchedData = await fetchUserThreads({
-                    pageSize: 20,
-                    pageNumber: 1,
-                    userid: accountId,
-                  })
 
-    }
-  }
-//   let thread = await fetchUserThreads({
-//       pageSize: 20,
-//       pageNumber: 1,
-//       userid: accountId,
-//     })
   
   
-
- 
-
-//   console.log(thread);
-
-  {
-    const renderThreads = (threads:any)=>{
-        const threadContainer = document.getElementById("thread-container");
-        threads.post.map((thread:any) => (
-            <ThreadCard
-              key={thread._id}
-              id={thread._id}
-              currentUserId={thread?.id}
-              parentId={thread.parentId}
-              content={thread.text}
-              author={thread.author}
-              community={thread.community}
-              createedAt={thread.createedAt}
-              comments={thread.children}
-            />
-          ))
-    }
-}
+  let threads = await fetchUserThreads({
+      pageSize: 20,
+      pageNumber: 1,
+      userid: accountId,
+    })
 
   return (
     <div className="text-white text-xl">
@@ -103,14 +50,14 @@ export const ProfileHeader = async ({
         </h1>
       </div>
       <section className="text-base ">{bio}</section>
-      <div className="text-lg mt-8">
-        <button onClick={} className="bg-zinc-800 p-3 rounded-xl hover:bg-zinc-700">
+      <div className="text-lg mt-8 ">
+        <a   className="cursor-pointer bg-zinc-800 p-3 rounded-xl hover:bg-zinc-700">
           Posts
-        </button>
-        <button onClick={} className="bg-zinc-800 p-3 rounded-xl hover:bg-zinc-700 mx-5">
+        </a>
+        <a className="cursor-pointer bg-zinc-800 p-3 rounded-xl hover:bg-zinc-700 mx-5">
           Comments
-        </button>
-        <button className="bg-zinc-800 p-3 rounded-xl hover:bg-zinc-700 ">
+        </a>
+        <button className="cursor-pointer bg-zinc-800 p-3 rounded-xl hover:bg-zinc-700 ">
           Mentions
         </button>
       </div>
@@ -118,7 +65,7 @@ export const ProfileHeader = async ({
       <article id="thread-container"></article>
 
 
-        {/* {thread.post.map((thread) => (
+        {threads.post.map((thread) => (
           <ThreadCard
             key={thread._id}
             id={thread._id}
@@ -130,8 +77,8 @@ export const ProfileHeader = async ({
             createedAt={thread.createedAt}
             comments={thread.children}
           />
-        ))} */}
+        ))}
       
     </div>
   );
-};
+}

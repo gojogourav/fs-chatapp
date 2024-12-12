@@ -166,7 +166,7 @@ export async function fetchUserComments({
   const skipAmount = (pageNumber-1)*pageSize;
   try{
     await dbConnect();
-    const userComments = Thread.find({author:userid,parentId:{$ne:null}})
+    const userComments = await Thread.find({author:userid,parentId:{$ne:null}})
     .sort({createdAt:"desc"})
     .skip(skipAmount)
     .populate({ path: "author", model: User })
@@ -177,7 +177,7 @@ export async function fetchUserComments({
           model: User,
           select: "_id name parentId image",
         },
-      });
+      }).exec();
 
       return{post:userComments};
     
